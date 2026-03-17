@@ -9,7 +9,7 @@
 ## 실행
 
 ```bash
-cd "Chapter_1/1.8 etc/http_server"
+cd "Chapter_2/2.1.2 프로세스 간 통신 실습/http_server"
 python3 server.py
 ```
 

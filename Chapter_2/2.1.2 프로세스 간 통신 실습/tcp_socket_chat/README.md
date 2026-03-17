@@ -12,21 +12,21 @@
 터미널 1:
 
 ```bash
-cd "Chapter_1/1.8 etc/tcp_socket_chat"
+cd "Chapter_2/2.1.2 프로세스 간 통신 실습/tcp_socket_chat"
 python3 server.py
 ```
 
 터미널 2:
 
 ```bash
-cd "Chapter_1/1.8 etc/tcp_socket_chat"
+cd "Chapter_2/2.1.2 프로세스 간 통신 실습/tcp_socket_chat"
 python3 client.py --name alice
 ```
 
 터미널 3:
 
 ```bash
-cd "Chapter_1/1.8 etc/tcp_socket_chat"
+cd "Chapter_2/2.1.2 프로세스 간 통신 실습/tcp_socket_chat"
 python3 client.py --name bob
 ```
 
