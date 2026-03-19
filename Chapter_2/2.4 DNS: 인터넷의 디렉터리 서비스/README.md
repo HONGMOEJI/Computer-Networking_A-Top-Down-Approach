@@ -426,8 +426,31 @@ Name과 Value는 Type을 따른다. 즉, **Type에 따라서** Name과 Value에 
 
 > **C**anonical **NAME**
 
-- Name : 정식 호스트 이름의 alias name
-- Value : 별칭 호스트 이름 Name에 대한 정식 호스트 이름
+- Name : 별칭 호스트 이름(alias hostname)
+- Value : 그 별칭이 가리키는 정식 호스트 이름(canonical hostname)
+
+즉, `CNAME`은 **"이 이름은 진짜 이름이 아니라 다른 호스트 이름의 별명이다"** 를 나타낸다.
+
+예를 들어:
+
+```text
+www.example.com -> CNAME -> server1.example.com
+server1.example.com -> A -> 192.0.2.10
+```
+
+라고 하면,
+
+- 사용자는 `www.example.com`만 기억하면 되고
+- 실제 서버의 진짜 이름은 `server1.example.com`이다.
+
+왜 이렇게 하냐면, **사용자가 보는 이름과 실제 서버 이름을 분리하기 위해서**다.
+
+예를 들어 운영자는:
+
+- 사용자가 접속하는 이름은 계속 `www.example.com`으로 유지하고
+- 뒤에서는 실제 서버를 `server1.example.com`에서 `server9.example.com`으로 바꿀 수 있다.
+
+즉, `CNAME`은 **이름에 대한 별칭(alias)을 제공하여 운영을 유연하게 하는 레코드**라고 이해하면 된다.
 
 <br/>
 
@@ -435,12 +458,61 @@ Name과 Value는 Type을 따른다. 즉, **Type에 따라서** Name과 Value에 
 
 > **M**ail e**X**change
 
+- Name : 메일을 받을 도메인 이름
 - Value : 별칭 호스트 이름 Name을 갖는 메일 서버의 정식 이름
 - MX 레코드는 메일 서버의 호스트 이름이 간단한 별칭을 갖는 것을 허용한다.
+
+즉, `MX`는 **"이 도메인으로 온 메일은 어떤 메일 서버가 받아야 하는가?"** 를 알려주는 레코드다.
+
+예를 들어 사용자가 `alice@example.com`으로 메일을 보낸다고 해보자.
+
+그러면 송신 측 메일 서버는 먼저 `example.com`의 `MX` 레코드를 질의한다.
+
+```text
+example.com -> MX -> mail.example.com
+mail.example.com -> A -> 192.0.2.20
+```
+
+즉,
+
+1. `example.com`의 메일을 실제로 받는 서버 이름은 `mail.example.com`이고
+2. 그 서버의 IP 주소는 다시 `A` 레코드를 통해 찾는다.
+
+왜 그냥 `A` 레코드만 쓰지 않느냐면, **웹 서버와 메일 서버를 서로 다른 장비로 분리할 수 있어야 하기 때문**이다.
+
+예를 들어:
+
+- 웹 접속은 `www.example.com`
+- 메일 수신은 `mail.example.com`
+
+처럼 역할을 나눌 수 있다.
+
+즉, `MX`는 **도메인에 대한 메일 수신 담당 서버를 지정하는 레코드**라고 보면 된다.
 
 <br/>
 
 메일 서버의 정식 이름을 얻기 위해서는 MX 레코드에 대한 질의를 해야 하고, 다른 서버의 정식 이름을 얻기 위해선 CNAME 레코드에 대한 질의를 한다.
+
+<br/>
+
+### 한 번에 비교
+
+- `A`
+  - 호스트 이름을 IP 주소로 직접 매핑
+  - e.g., `server1.example.com -> 192.0.2.10`
+- `CNAME`
+  - 어떤 이름이 다른 이름의 별명임을 나타냄
+  - e.g., `www.example.com -> server1.example.com`
+- `MX`
+  - 특정 도메인의 메일을 어느 서버가 받아야 하는지 나타냄
+  - e.g., `example.com -> mail.example.com`
+
+즉,
+
+- `CNAME`은 **웹/서비스 이름의 별칭**
+- `MX`는 **메일 수신 서버 지정**
+
+역할이라고 구분하면 이해하기 쉽다.
 
 <br/>
 
