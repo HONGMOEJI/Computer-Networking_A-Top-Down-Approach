@@ -69,7 +69,7 @@ SMTP에서는 모든 메일 메시지의 몸체는 단순한 `7-bit ASCII`여야
 이 때문에 전송 용량이 제한되어 커다란 첨부 파일이나 비디오 파일을 보낼 때 문제를 일으킨다.
 
 <p align="center">
-  <img width="680" alt="Modern email flow diagram" src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Diagram_of_modern_email_flow.svg">
+  <img width="680" alt="Modern email flow diagram" src="https://upload.wikimedia.org/wikipedia/commons/5/50/Diagram_of_modern_email_flow.svg">
 </p>
 
 <p align="center">
