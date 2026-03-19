@@ -68,6 +68,37 @@ SMTP에서는 모든 메일 메시지의 몸체는 단순한 `7-bit ASCII`여야
 
 이 때문에 전송 용량이 제한되어 커다란 첨부 파일이나 비디오 파일을 보낼 때 문제를 일으킨다.
 
+<p align="center">
+  <img width="680" alt="Modern email flow diagram" src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Diagram_of_modern_email_flow.svg">
+</p>
+
+<p align="center">
+  <sub>Source: <a href="https://commons.wikimedia.org/wiki/File:Diagram_of_modern_email_flow.svg">Wikimedia Commons - Diagram of modern email flow (CC0)</a></sub>
+</p>
+
+<br/>
+
+위 문장을 조금 더 쉽게 풀면 다음과 같다.
+
+- `uses TCP ... port 25`
+  - SMTP는 메일 서버끼리 메시지를 전달할 때 `TCP`를 사용한다.
+  - 이때 전통적으로 서버 간 SMTP 통신은 `25번 포트`를 사용한다.
+  - 즉, 송신 메일 서버의 SMTP 클라이언트가 수신 메일 서버의 SMTP 서버 `port 25`로 연결을 시도하는 구조다.
+
+- `direct transfer`
+  - 여기서 direct는 **송신 메일 서버가 수신 메일 서버와 직접 SMTP 대화를 한다**는 뜻이다.
+  - 즉, 웹 캐시처럼 중간 프록시가 대신 받아주는 구조가 아니라, `보내는 서버 -> 받는 서버`로 직접 전달한다.
+  - 다만 사용자의 메일 앱이 수신자 메일 서버와 직접 통신하는 것은 아니고, **사용자 에이전트 -> 자신의 메일 서버 -> 상대 메일 서버** 순서로 전달된다.
+
+- `7-bit ASCII`
+  - 초기 SMTP는 메시지 몸체가 기본적으로 `7-bit ASCII` 텍스트라고 가정했다.
+  - 그래서 이미지, 동영상, PDF 같은 **바이너리 데이터**를 그대로 보내기 어렵다.
+  - 현대 전자메일은 이 문제를 `MIME`을 통해 해결한다.
+  - MIME은 첨부 파일을 `Base64` 같은 인코딩으로 ASCII 텍스트처럼 바꾸어 보내는데, 이 과정에서 크기가 원본보다 커진다.  
+    (대표적으로 Base64는 대략 `33%` 정도 크기 증가가 생긴다.)
+
+즉, SMTP 자체는 원래 **텍스트 중심 프로토콜**이었고, 첨부 파일 전송은 나중에 `MIME`이 보완한 기능이라고 이해하면 된다.
+
 <br/>
 
 Three phases of transfer
