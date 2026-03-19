@@ -281,14 +281,78 @@ DNS는 많은 서버를 이용하고 이들을 계층 형태로 구성하며 전
 <br/>
 <br/>
 
-아래 그림은 모든 질의가 재귀적인 DNS 질의 사슬을 보여준다.
+### 재귀적 질의(recursive query)
+
+`재귀적 질의`는 **질의를 받은 DNS 서버가 최종 답을 대신 찾아서 돌려주는 방식**이다.
+
+즉, 클라이언트는
+
+- "이 호스트 이름의 IP 주소를 끝까지 알아와 줘"
+
+라고 요청하고, 질의를 받은 DNS 서버는 다른 DNS 서버들에게 필요한 추가 질의를 수행한 뒤 **최종 결과**를 클라이언트에게 돌려준다.
+
+쉽게 말하면:
+
+- 클라이언트는 한 서버에게만 요청하고
+- 그 서버가 나머지 일을 대신 처리한다.
+
+그래서 `호스트 -> 로컬 DNS 서버` 구간은 보통 재귀적 질의로 이해하면 된다.
+
+아래 그림은 모든 질의가 재귀적으로 이어지는 DNS 질의 사슬을 보여준다.
 
 <p align="center"><img width="400" alt="재귀적 질의" src="https://user-images.githubusercontent.com/76640167/210622856-0c967585-6ce3-45c7-97bd-c1ed6e3143fc.png">
 
 <br/>
 <br/>
 
-> 일반 질의는 전형적으로 반복적 질의를 따른다.
+### 반복적 질의(iterative query)
+
+`반복적 질의`는 **질의를 받은 DNS 서버가 자신이 아는 최선의 정보만 돌려주고, 다음 단계 질의는 요청자가 다시 수행하는 방식**이다.
+
+즉, DNS 서버는
+
+- 최종 답을 알고 있으면 바로 답하고
+- 모르면 "나는 모르지만, 다음에는 이 서버에게 물어봐"라는 식으로 다른 DNS 서버 정보를 알려준다.
+
+예를 들어 로컬 DNS 서버가 루트 DNS 서버에 질의하면,  
+루트 DNS 서버는 직접 최종 IP를 주는 대신 `TLD 서버` 정보를 돌려준다.
+
+그 다음 로컬 DNS 서버는:
+
+1. TLD 서버에 다시 질의하고
+2. 책임 DNS 서버 정보를 받고
+3. 책임 DNS 서버에 다시 질의해서
+4. 최종 IP 주소를 얻는다.
+
+쉽게 말하면:
+
+- 질의를 받은 서버가 끝까지 대신 해결해주지 않고
+- "다음에 누구에게 물어볼지"만 알려주는 방식이다.
+
+<p align="center">
+  <img width="560" alt="Example of an iterative DNS resolver" src="https://en.wikibooks.org/wiki/Special:Redirect/file/Example_of_an_iterative_DNS_resolver.svg">
+</p>
+
+<p align="center">
+  <sub>Source: <a href="https://en.m.wikibooks.org/wiki/File:Example_of_an_iterative_DNS_resolver.svg">Wikibooks - Example of an iterative DNS resolver</a></sub>
+</p>
+
+<br/>
+
+### 한 번에 비교
+
+- `재귀적 질의`
+  - 질의를 받은 서버가 **최종 답을 대신 찾아서** 돌려준다.
+  - 클라이언트 입장에서는 편하다.
+- `반복적 질의`
+  - 질의를 받은 서버가 **다음에 물어볼 서버 정보**를 알려준다.
+  - 요청자가 여러 서버를 차례대로 따라가며 답을 얻는다.
+
+<br/>
+
+> 일반적인 DNS 동작에서는  
+> `호스트 -> 로컬 DNS 서버` 구간은 보통 `재귀적 질의`,  
+> `로컬 DNS 서버 -> 루트/TLD/책임 DNS 서버` 구간은 보통 `반복적 질의`로 이해하면 된다.
 
 - 재귀적 질의에서는 높은 계층에 있는 DNS server가 책임져야 하는 것들이 많다.
     - puts burden of name resolutions on contacted name server
